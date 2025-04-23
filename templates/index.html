@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>TuneSmith</title>
+		<link
+			rel="stylesheet"
+			href="{{ url_for('static', filename='css/styles.css') }}"
+		/>
+	</head>
+	<body>
+		<header>
+			<div class="container">
+				<h1>TuneSmith</h1>
+				<div id="auth-status">
+					<!-- Will be populated by JavaScript -->
+				</div>
+			</div>
+		</header>
+
+		<main class="container">
+			<div id="login-container" style="display: none">
+				<div class="card">
+					<h2>Create AI-Powered Spotify Playlists</h2>
+					<p>Connect your Spotify account to get started:</p>
+					<button id="login-button" class="button primary">
+						Connect with Spotify
+					</button>
+				</div>
+			</div>
+
+			<div id="app-container" style="display: none">
+				<div class="card">
+					<h2>Create a Playlist</h2>
+					<p>
+						Describe the mood, genre, or theme you want for your
+						playlist:
+					</p>
+					<div class="input-group">
+						<input
+							type="text"
+							id="user-request"
+							placeholder="e.g., A relaxing playlist for a rainy afternoon"
+						/>
+						<button id="submit-button" class="button primary">
+							Create
+						</button>
+					</div>
+				</div>
+
+				<div id="loading" class="card" style="display: none">
+					<div class="spinner"></div>
+					<p>Creating your playlist...</p>
+				</div>
+
+				<div id="result-container" style="display: none">
+					<div class="card">
+						<h2>Your Playlist</h2>
+						<div id="playlist-result"></div>
+					</div>
+
+					<div class="card">
+						<h3>How It Was Made</h3>
+						<div id="agent-steps"></div>
+					</div>
+				</div>
+			</div>
+		</main>
+
+		<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+	</body>
+</html>

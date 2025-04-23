@@ -1,0 +1,188 @@
+/* Basic reset */
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+body {
+	font-family: "Helvetica Neue", Arial, sans-serif;
+	line-height: 1.6;
+	color: #ffffff;
+	background-color: #121212;
+}
+
+.container {
+	max-width: 800px;
+	margin: 0 auto;
+	padding: 0 20px;
+}
+
+/* Header */
+header {
+	background-color: #1db954;
+	padding: 20px 0;
+	color: white;
+}
+
+header .container {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+h1,
+h2,
+h3,
+h4 {
+	margin-bottom: 15px;
+}
+
+/* Cards */
+.card {
+	background-color: #282828;
+	border-radius: 8px;
+	padding: 20px;
+	margin-bottom: 20px;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Buttons */
+.button {
+	display: inline-block;
+	padding: 10px 20px;
+	border: none;
+	border-radius: 50px;
+	cursor: pointer;
+	font-weight: bold;
+	text-decoration: none;
+	text-align: center;
+	transition: all 0.3s ease;
+}
+
+.button.primary {
+	background-color: #1db954;
+	color: white;
+}
+
+.button.primary:hover {
+	background-color: #1ed760;
+	transform: translateY(-2px);
+}
+
+.button.secondary {
+	background-color: transparent;
+	color: #1db954;
+	border: 2px solid #1db954;
+}
+
+.button.secondary:hover {
+	background-color: rgba(29, 185, 84, 0.1);
+}
+
+/* Input */
+.input-group {
+	display: flex;
+	margin-bottom: 20px;
+}
+
+input[type="text"] {
+	flex: 1;
+	padding: 10px 15px;
+	border: none;
+	border-radius: 50px 0 0 50px;
+	background-color: #3e3e3e;
+	color: white;
+	font-size: 16px;
+}
+
+.input-group .button {
+	border-radius: 0 50px 50px 0;
+}
+
+/* Loading spinner */
+.spinner {
+	width: 40px;
+	height: 40px;
+	margin: 0 auto 20px;
+	border: 4px solid rgba(255, 255, 255, 0.3);
+	border-radius: 50%;
+	border-top-color: #1db954;
+	animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+/* Agent steps */
+.step {
+	margin-bottom: 15px;
+	padding: 15px;
+	background-color: #3e3e3e;
+	border-radius: 8px;
+}
+
+.step-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 10px;
+	font-weight: bold;
+}
+
+.step-thought {
+	font-style: italic;
+	color: #b3b3b3;
+	margin-bottom: 10px;
+}
+
+.step-action {
+	font-weight: bold;
+}
+
+/* Playlist result */
+.playlist-card {
+	display: flex;
+	align-items: center;
+	margin-bottom: 15px;
+}
+
+.playlist-info {
+	flex: 1;
+}
+
+.playlist-title {
+	font-size: 1.2em;
+	font-weight: bold;
+	margin-bottom: 5px;
+}
+
+.playlist-meta {
+	color: #b3b3b3;
+	font-size: 0.9em;
+}
+
+.playlist-actions {
+	display: flex;
+	gap: 10px;
+	margin-top: 15px;
+}
+
+/* Media queries */
+@media (max-width: 600px) {
+	.input-group {
+		flex-direction: column;
+	}
+
+	input[type="text"] {
+		border-radius: 50px;
+		margin-bottom: 10px;
+	}
+
+	.input-group .button {
+		border-radius: 50px;
+	}
+}
