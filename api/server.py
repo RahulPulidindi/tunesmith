@@ -156,7 +156,7 @@ def create_app():
                     'redirect_uri': config.SPOTIFY_REDIRECT_URI,
                     'token': json.dumps(tokens)
                 },
-                spotify_mcp_path=config.SPOTIFY_MCP_PATH
+                # spotify_mcp_path=config.SPOTIFY_MCP_PATH
             )
             
             # Redirect to the main page
