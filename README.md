@@ -5,7 +5,6 @@ An AI agent that translates thematic or mood-based prompts into curated Spotify 
 ## Prerequisites
 
 *   Python (3.9 or later recommended)
-*   pip (Python package installer)
 *   A Spotify Account
 *   An OpenAI Account
 
@@ -13,23 +12,16 @@ An AI agent that translates thematic or mood-based prompts into curated Spotify 
 
 1.  **Clone the repository (or ensure you are in the `tunesmith-main` directory).**
 
-2.  **Create and activate a virtual environment (Recommended):**
-    ```bash
-    python -m venv venv
-    # On Windows:
-    # venv\Scripts\activate
-    # On macOS/Linux:
-    source venv/bin/activate
-    ```
+2.  **Create and activate a virtual/conda environment :**
 
 3.  **Install required packages:**
     ```bash
-    pip install -r requirements.txt
-    # Or manually install:
-    # pip install flask python-dotenv requests spotipy langchain langchain-openai langchain-core pydantic Flask-Session
+    pip install flask python-dotenv requests spotipy langchain langchain-openai langchain-core pydantic Flask-Session
     ```
-    *(Ensure your `requirements.txt` includes `Flask-Session` if it's not already there)*
-
+    or use the requirements.txt file (not sure about this, it's quite messy)
+    ```
+    pip install -r requirements.txt
+    ```
 ## Configuration
 
 1.  **Create a `.env` file** in the project's root directory (`tunesmith-main`).
