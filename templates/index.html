@@ -1,73 +1,89 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>TuneSmith</title>
-		<link
-			rel="stylesheet"
-			href="{{ url_for('static', filename='css/styles.css') }}"
-		/>
-	</head>
-	<body>
-		<header>
-			<div class="container">
-				<h1>TuneSmith</h1>
-				<div id="auth-status">
-					<!-- Will be populated by JavaScript -->
-				</div>
-			</div>
-		</header>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TuneSmith</title>
+	<link rel="icon" href="/static/icons8-tuning-fork-16.png" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/styles.css') }}"
+    />
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <h1>TuneSmith</h1>
+            </div>
+            <div id="auth-status">
+                <button id="login-button" class="button button-spotify" style="display: none;">
+                    Connect with Spotify
+                </button>
+                <div id="user-info" style="display: none;">
+                    <span id="user-display-name"></span>
+                    <button id="logout-button" class="button button-secondary-dark">Logout</button>
+                </div>
+            </div>
+        </div>
+    </header>
 
-		<main class="container">
-			<div id="login-container" style="display: none">
-				<div class="card">
-					<h2>Create AI-Powered Spotify Playlists</h2>
-					<p>Connect your Spotify account to get started:</p>
-					<button id="login-button" class="button primary">
-						Connect with Spotify
-					</button>
-				</div>
-			</div>
+    <main class="container">
 
-			<div id="app-container" style="display: none">
-				<div class="card">
-					<h2>Create a Playlist</h2>
-					<p>
-						Describe the mood, genre, or theme you want for your
-						playlist:
-					</p>
-					<div class="input-group">
-						<input
-							type="text"
-							id="user-request"
-							placeholder="e.g., A relaxing playlist for a rainy afternoon"
-						/>
-						<button id="submit-button" class="button primary">
-							Create
-						</button>
-					</div>
-				</div>
+        <div id="login-prompt" class="card centered-prompt" style="display: none;">
+            <h2>Welcome to TuneSmith</h2>
+            <p>Your AI assistant for finding music and creating Spotify playlists.</p>
+            <p>Connect your Spotify account to get started.</p>
+        </div>
 
-				<div id="loading" class="card" style="display: none">
-					<div class="spinner"></div>
-					<p>Creating your playlist...</p>
-				</div>
+        <div id="app-container" style="display: none;">
+            <section id="request-input-section" class="card">
+                <h2>What music are you looking for?</h2>
+                <p>
+                    Describe a mood, genre, activity, search for songs, or ask to create a playlist:
+                </p>
+                <form id="request-form">
+                    <div class="input-group">
+                        <input
+                            type="text"
+                            id="user-request"
+                            placeholder="e.g., Create a playlist for focus, or find songs about summer"
+                            aria-label="Music request description"
+                            required
+                        />
+                        <button id="submit-button" type="submit" class="button button-primary">
+                            Submit
+                        </button>
+                    </div>
+                </form>
+            </section>
 
-				<div id="result-container" style="display: none">
-					<div class="card">
-						<h2>Your Playlist</h2>
-						<div id="playlist-result"></div>
-					</div>
+            <section id="loading-container" class="card loading-card" style="display: none;">
+                <div class="spinner"></div>
+                <p>TuneSmith AI is working...</p>
+                <p class="subtle-text">This might take a moment.</p>
+            </section>
 
-					<div class="card">
-						<h3>How It Was Made</h3>
-						<div id="agent-steps"></div>
-					</div>
-				</div>
-			</div>
-		</main>
+            <section id="error-container" class="card card-error" style="display: none;">
+                <h2>Oops! Something went wrong.</h2>
+                <p id="error-message">Could not process your request. Please try again.</p>
+            </section>
 
-		<script src="{{ url_for('static', filename='js/main.js') }}"></script>
-	</body>
+            <section id="result-container" style="display: none;">
+            </section>
+
+        </div> <!-- /app-container -->
+
+    </main>
+
+    <footer>
+        <div class="container">
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
 </html>
