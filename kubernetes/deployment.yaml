@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tunesmith
+  labels:
+    app: tunesmith
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tunesmith
+  template:
+    metadata:
+      labels:
+        app: tunesmith
+    spec:
+      containers:
+      - name: tunesmith
+        image: gcr.io/coms6998amc/tunesmith:latest
+        ports:
+        - containerPort: 5000
+        env:
+        - name: OPENAI_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: tunesmith-secrets
+              key: openai-api-key
+        - name: SPOTIFY_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: tunesmith-secrets
+              key: spotify-client-id
+        - name: SPOTIFY_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: tunesmith-secrets
+              key: spotify-client-secret
+        - name: SPOTIFY_REDIRECT_URI
+          value: "https://tunesssmith.xyz/callback"
+        - name: FLASK_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: tunesmith-secrets
+              key: flask-secret-key
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m" 
