@@ -275,12 +275,25 @@ class SpotifyAgent:
         self.openai_api_key = openai_api_key
         self.spotify_credentials = spotify_credentials
         self.client = SpotifyClient(spotify_credentials=self.spotify_credentials)
+        
+        # Temperature settings for different task types
+        self.temperature_settings = {
+            "creative": 0.9,      # High temperature for creative tasks
+            "analytical": 0.3,    # Low temperature for analytical tasks
+            "recommendation": 0.7, # Medium temperature for recommendations
+            "default": 0.7        # Default temperature
+        }
+        
         self.llm = ChatOpenAI(
-            temperature=0.7, model="gpt-3.5-turbo-0125", openai_api_key=self.openai_api_key
+            temperature=self.temperature_settings["default"],
+            model="gpt-3.5-turbo-0125",
+            openai_api_key=self.openai_api_key
         )
         self.tools = self._create_tools()
         self.memory = ConversationBufferMemory(
-            memory_key="chat_history", return_messages=True, output_key='output'
+            memory_key="chat_history",
+            return_messages=True,
+            output_key='output'
         )
         self.agent_executor = self._create_agent_executor()
 
@@ -343,11 +356,35 @@ class SpotifyAgent:
         )
         return agent_executor
 
+    def _get_temperature_for_task(self, user_input: str) -> float:
+        """Determine the appropriate temperature based on the task type."""
+        input_lower = user_input.lower()
+        
+        # Creative tasks (playlist creation, mood-based recommendations)
+        if any(word in input_lower for word in ["create", "make", "build", "new playlist", "mood", "feel"]):
+            return self.temperature_settings["creative"]
+            
+        # Analytical tasks (statistics, analysis)
+        elif any(word in input_lower for word in ["analyze", "statistics", "stats", "compare", "top"]):
+            return self.temperature_settings["analytical"]
+            
+        # Recommendation tasks
+        elif any(word in input_lower for word in ["recommend", "suggest", "similar to", "like"]):
+            return self.temperature_settings["recommendation"]
+            
+        return self.temperature_settings["default"]
+
     def process_request(self, user_input: str) -> Dict[str, Any]:
         if not self.client.sp:
-             return {"success": False, "error": "Spotify client not authenticated."}
+            return {"success": False, "error": "Spotify client not authenticated."}
+            
         print(f"Processing request with AgentExecutor: {user_input}")
         try:
+            # Determine and set appropriate temperature
+            temperature = self._get_temperature_for_task(user_input)
+            self.llm.temperature = temperature
+            print(f"Using temperature setting: {temperature}")
+            
             response = self.agent_executor.invoke({"input": user_input})
             final_output_text = response.get("output", "Task completed.")
             intermediate_steps = response.get("intermediate_steps", [])
