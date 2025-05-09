@@ -32,7 +32,6 @@ class SpotifyPlaybackSchema(BaseModel):
 
 class SpotifyClient:
     """Client for interacting with Spotify through the spotipy library, managing authentication."""
-    # ... (__init__, _authenticate, _ensure_client - Unchanged) ...
     def __init__(self, spotify_credentials: Dict[str, str]):
         self.credentials = spotify_credentials
         self.sp: Optional[spotipy.Spotify] = None
@@ -40,6 +39,9 @@ class SpotifyClient:
         self._authenticate()
 
     def _authenticate(self):
+        '''
+        Authenticates with Spotify using the provided credentials.
+        '''
         print("Attempting Spotify authentication...")
         try:
             self.sp_oauth = SpotifyOAuth(
@@ -75,6 +77,11 @@ class SpotifyClient:
             import traceback; traceback.print_exc(); self.sp = None
 
     def _ensure_client(self) -> bool:
+        '''
+        Ensures that the Spotify client is initialized and authenticated.
+        Returns:
+            bool: True if the client is initialized and authenticated, False otherwise.
+        '''
         if not self.sp:
             print("Spotify client not initialized or authentication failed previously.")
             if self.sp_oauth:
@@ -91,6 +98,14 @@ class SpotifyClient:
         return True
 
     def search_tracks(self, query: str, limit: int = 10) -> Dict[str, Any]:
+        '''
+        Searches for tracks on Spotify based on a query string.
+        Args:
+            query (str): The search query for tracks, albums, or artists.
+            limit (int): The maximum number of results to return.
+        Returns:
+            Dict[str, Any]: A dictionary containing the search results.
+        '''
         if not self._ensure_client(): return {"error": "Not authenticated with Spotify"}
         try:
             print(f"Searching Spotify for query: '{query}' limit: {limit}")
@@ -114,7 +129,15 @@ class SpotifyClient:
 
 
     def create_playlist(self, name: str, track_uris: List[str], description: str = "") -> Dict[str, Any]:
-        """Create a playlist, add tracks, and return enhanced details including cover and preview."""
+        '''
+        Creates a playlist, add tracks, and return enhanced details including cover and preview.
+        Args:
+            name (str): The name of the playlist.
+            track_uris (List[str]): The URIs of the tracks to add to the playlist.
+            description (str): The description of the playlist.
+        Returns:
+            Dict[str, Any]: A dictionary containing the result of the playlist creation.
+        '''
         if not self._ensure_client(): return {"error": "Not authenticated with Spotify"}
         try:
             print(f"Attempting to create playlist '{name}' with {len(track_uris)} tracks. Description: '{description}'")
@@ -163,7 +186,13 @@ class SpotifyClient:
             import traceback; traceback.print_exc(); return {"error": str(e)}
 
     def get_all_playlist_items(self, playlist_id: str) -> Dict[str, Any]:
-        """Fetches all tracks from a playlist, handling pagination."""
+        '''
+        Fetches all tracks from a playlist, handling pagination.
+        Args:
+            playlist_id (str): The ID of the playlist.
+        Returns:
+            Dict[str, Any]: A dictionary containing the tracks in the playlist.
+        '''
         if not self._ensure_client(): return {"error": "Not authenticated with Spotify"}
         all_tracks = []
         offset = 0
@@ -211,7 +240,14 @@ class SpotifyClient:
             return {"error": str(e)}
 
     def remove_track_from_playlist(self, playlist_id: str, track_uri: str) -> Dict[str, Any]:
-        """Removes all occurrences of a specific track from a playlist."""
+        '''
+        Removes all occurrences of a specific track from a playlist.
+        Args:
+            playlist_id (str): The ID of the playlist.
+            track_uri (str): The URI of the track to remove.
+        Returns:
+            Dict[str, Any]: A dictionary containing the result of the track removal.
+        '''
         if not self._ensure_client(): return {"error": "Not authenticated with Spotify"}
         try:
             print(f"Attempting to remove all occurrences of track '{track_uri}' from playlist '{playlist_id}'")
@@ -230,6 +266,14 @@ class SpotifyClient:
         except Exception as e: print(f"Error removing track: {str(e)}"); return {"error": str(e), "success": False}
 
     def control_playback(self, action: str, context_uri: Optional[str] = None) -> Dict[str, Any]:
+        '''
+        Controls Spotify playback.
+        Args:
+            action (str): The playback action to perform: 'play', 'pause', 'next', 'previous'.
+            context_uri (Optional[str]): Optional Spotify URI of the context to play (album, artist, playlist URI). Required for 'play' if not resuming.
+        Returns:
+            Dict[str, Any]: A dictionary containing the result of the playback action.
+        '''
         if not self._ensure_client(): return {"error": "Not authenticated with Spotify"}
         try:
             result = {"success": True, "action": action}; action = action.lower()
@@ -298,6 +342,11 @@ class SpotifyAgent:
         self.agent_executor = self._create_agent_executor()
 
     def _create_tools(self) -> List[Tool]:
+        '''
+        Creates the tools for the Spotify agent.
+        Returns:
+            List[Tool]: A list of tools.
+        '''
         tools = [
             StructuredTool.from_function(
                 func=self.client.search_tracks, name="spotify_search_tracks",
@@ -351,13 +400,19 @@ class SpotifyAgent:
         agent = create_openai_functions_agent(self.llm, self.tools, prompt)
         agent_executor = AgentExecutor(
             agent=agent, tools=self.tools, memory=self.memory, verbose=True,
-            max_iterations=8, # Keep iterations for now, prompt should fix it
+            max_iterations=8, 
             handle_parsing_errors=True, return_intermediate_steps=True
         )
         return agent_executor
 
     def _get_temperature_for_task(self, user_input: str) -> float:
-        """Determine the appropriate temperature based on the task type."""
+        '''
+        Determines the appropriate temperature based on the task type.
+        Args:
+            user_input (str): The user's input.
+        Returns:
+            float: The appropriate temperature.
+        '''
         input_lower = user_input.lower()
         
         # Creative tasks (playlist creation, mood-based recommendations)
@@ -375,6 +430,13 @@ class SpotifyAgent:
         return self.temperature_settings["default"]
 
     def process_request(self, user_input: str) -> Dict[str, Any]:
+        '''
+        Processes the user's request.
+        Args:
+            user_input (str): The user's input.
+        Returns:
+            Dict[str, Any]: A dictionary containing the result of the request.
+        '''
         if not self.client.sp:
             return {"success": False, "error": "Spotify client not authenticated."}
             
@@ -407,16 +469,15 @@ class SpotifyAgent:
                         else: obs_text = f"Observation: {json.dumps(observation, indent=2)}"
                     else: obs_text = f"Observation: {str(observation)}"
                     agent_steps_explanation_list.append(obs_text)
-                    # Observation from create_playlist now contains the enhanced details
                     if tool_name == "spotify_create_playlist" and isinstance(observation, dict) and not observation.get("error"):
                         playlist_url = observation.get("external_urls", {}).get("spotify")
                         if playlist_url:
                              playlist_details_extracted = {
                                  "name": observation.get("name"), "description": observation.get("description"),
                                  "url": playlist_url, "track_count": observation.get("tracks", {}).get("total"),
-                                 "cover_image_url": observation.get("cover_image_url"), # Use directly
-                                 "tracks_preview": observation.get("tracks_preview"),    # Use directly
-                                 "id": observation.get("id") # Keep ID
+                                 "cover_image_url": observation.get("cover_image_url"), 
+                                 "tracks_preview": observation.get("tracks_preview"),    
+                                 "id": observation.get("id") 
                              }
                         else:
                              print("Warning: Playlist created but URL not found."); last_error = last_error or "Playlist created, but failed to get URL."
