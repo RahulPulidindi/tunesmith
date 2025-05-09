@@ -1,7 +1,7 @@
 # TuneSmith
 # Check Deployment.md for Deployment instructions (Readme not required)
 
-An AI assistant to help you find music and create/refine Spotify playlists based on natural language prompts. Built with LangChain, OpenAI, Spotify Web API, and Flask.
+An AI assistant to help you find music and create/refine Spotify playlists based on natural language prompts. Built with LangChain, OpenAI, Spotify Web API, and Flask. Currently deployed publicly on https://tunesssmith.xyz/. Contact us if you'd like to be registered as a user.
 
 ## Features
 
