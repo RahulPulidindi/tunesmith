@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, session, redirect, url_for, render_template # Added request, jsonify
+from flask import Flask, request, jsonify, session, redirect, url_for, render_template 
 import os
 import secrets
 import json
@@ -13,6 +13,9 @@ from agent.agent import SpotifyAgent
 agent_instances = {}
 
 def create_app():
+    '''
+    Creates the Flask application.
+    '''
     app = Flask(__name__, static_folder="../static", template_folder="../templates")
     app.secret_key = config.FLASK_SECRET_KEY
     app.config['SESSION_TYPE'] = 'filesystem'
@@ -24,6 +27,9 @@ def create_app():
     os.makedirs('./flask_session', exist_ok=True)
 
     def get_agent_instance():
+        '''
+        Gets the agent instance from the session.
+        '''
         if 'agent_id' not in session or 'spotify_token_json' not in session:
             print(f"get_agent failed: agent_id:{'agent_id' in session}, token:{'spotify_token_json' in session}")
             return None, "Not authenticated"
@@ -53,6 +59,9 @@ def create_app():
 
     @app.route('/api/login')
     def login():
+        '''
+        Logs in the user.
+        '''
         state = secrets.token_hex(16); session['oauth_state'] = state
         auth_params = { 'client_id': config.SPOTIFY_CLIENT_ID, 'response_type': 'code', 'redirect_uri': config.SPOTIFY_REDIRECT_URI,
                         'state': state, 'scope': ' '.join([ 'user-read-playback-state', 'user-modify-playback-state',
@@ -61,6 +70,9 @@ def create_app():
 
     @app.route('/callback')
     def callback():
+        '''
+        Callback for the Spotify OAuth flow.
+        '''
         state = request.args.get('state'); error = request.args.get('error'); code = request.args.get('code')
         if state != session.get('oauth_state'): return jsonify({"error": "State mismatch."}), 400
         if error: return jsonify({"error": f"Spotify OAuth Error: {error}"}), 400
