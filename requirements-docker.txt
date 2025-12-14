@@ -1,0 +1,25 @@
+# Core Flask
+flask==3.1.0
+Flask-Session==0.8.0
+gunicorn==21.2.0
+
+# Environment & Config
+python-dotenv==1.1.0
+
+# HTTP & Requests
+requests==2.31.0
+
+# Spotify
+spotipy==2.25.1
+
+# LangChain & OpenAI
+langchain==0.3.24
+langchain-openai==0.3.14
+langchain-core==0.3.55
+openai==1.76.0
+
+# Data validation
+pydantic==2.11.3
+
+# Session storage
+cachelib==0.13.0

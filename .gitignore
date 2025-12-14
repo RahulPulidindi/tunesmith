@@ -6,4 +6,4 @@ __pycache__/
 *.pyd
 *.pyw
 flask_session/
-kubernetes/secrets-prod.yaml
+kubernetes/
